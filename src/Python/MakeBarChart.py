@@ -1,4 +1,5 @@
 #This script will make a bar chart from a CAMI profile
+import getopt
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
@@ -7,7 +8,22 @@ import numpy as np
 from matplotlib import rcParams
 rcParams.update({'figure.autolayout': True})
 
-input_file="all.fq-QC-default.profile"
+
+try:
+	opts, args = getopt.getopt(sys.argv[1:],"hi:o:",["Help=","InputCAMIProfile=","OutputFolder="])
+except getopt.GetoptError:
+	print 'Unknown option, call using: python MakeBarChart.py -i <InputCAMIProfile> -o <OutputFolder>'
+	sys.exit(2)
+for opt, arg in opts:
+	if opt == '-h':
+		print 'python MakeBarChart.py -i <InputCAMIProfile> -o <OutputFolder>'
+		sys.exit(2)
+	elif opt in ("-i", "--InputCAMIProfile"):
+		input_file = arg
+	elif opt in ("-o", "--OutputFolder"):
+		output_folder = arg
+
+#input_file="all.fq-QC-default.profile"
 profile_dict = dict()
 fid = open(input_file,"r")
 for line in fid:
@@ -60,7 +76,7 @@ for rank in ranks:
 	_=plt.xlabel('Taxa');
 	_=plt.ylabel('Rel. abundance');
 	_=plt.title(rank);
-	_=plt.savefig(rank+".png");
+	_=plt.savefig(os.path.join(output_folder,os.path.basename(input_file)+"_"+rank+".png");
 	_=plt.close();
 
 
